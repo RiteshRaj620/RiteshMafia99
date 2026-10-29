@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>CR-Remover | Video Optimizer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--panel:#141414;--border:#242424;--white:#fff}
+body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+.header{min-height:112px;padding:24px 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1c1c1c}
+.logo{font-size:clamp(26px,6vw,54px);font-weight:900;letter-spacing:-1.5px;white-space:nowrap;background:linear-gradient(100deg,#00d8f0,#279eff,#7952ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.menu{width:48px;display:flex;flex-direction:column;gap:8px;margin-left:15px}.menu span{height:5px;border-radius:20px;background:white}
+.hero{text-align:center;padding:55px 5% 0}
+h1{font-size:clamp(38px,9vw,78px);font-weight:900;line-height:1.16;letter-spacing:-1.5px;margin-bottom:32px}
+.gradient{background:linear-gradient(100deg,#00dbea,#289dff 45%,#8140ef);-webkit-background-clip:text;background-clip:text;color:transparent}
+.description{max-width:850px;margin:auto;font-size:clamp(17px,3.5vw,28px);line-height:1.7;color:#f6f6f6}
+.card{width:min(88%,850px);margin:110px auto 55px;padding:clamp(18px,5vw,42px);background:#141414;border:2px solid #222;border-radius:38px}
+.drop{min-height:270px;border:3px dashed #303030;border-radius:27px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;cursor:pointer}
+.drop:hover,.drop.drag{border-color:#299fff;background:#168cff08}
+.icon{font-size:38px;margin-bottom:18px}.drop-title{font-size:clamp(19px,4vw,30px);line-height:1.6}.blue{color:#38a9ff}.hint{color:#999;font-size:13px;margin-top:12px}
+input[type=file]{display:none}
+.file{display:none;margin-top:16px;padding:15px;background:#090909;border:1px solid #292929;border-radius:12px;line-height:1.7;overflow-wrap:anywhere;font-size:14px}
+video{display:none;width:100%;max-height:360px;margin-top:18px;background:#000;border-radius:14px}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.field{padding:15px;background:#090909;border:1px solid #292929;border-radius:12px}
+label{display:block;font-size:13px;color:#aaa;margin-bottom:10px}
+select{width:100%;padding:12px;background:#171717;color:#fff;border:1px solid #393939;border-radius:8px}
+.audio-field{margin-top:12px}
+.btn{width:100%;padding:17px;margin-top:20px;border:0;border-radius:12px;background:linear-gradient(100deg,#00dbea,#278fff,#7942ff);color:white;font-size:16px;font-weight:800;cursor:pointer}
+.btn:disabled{opacity:.5}
+#status{display:none;margin-top:18px;padding:16px;background:#090909;border:1px solid #292929;border-radius:12px;line-height:1.7;overflow-wrap:anywhere}
+.note{margin-top:18px;color:#aaa;font-size:12px;line-height:1.7}
+footer{text-align:center;border-top:1px solid #222;padding:28px 16px;color:#888;font-size:12px;line-height:1.8}
+@media(max-width:520px){.header{min-height:100px}.menu{width:38px}.menu span{height:5px}.hero{padding-top:48px}.card{width:90%;margin-top:95px;border-radius:28px}.drop{min-height:240px}.settings{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="logo">CR-Remover</div>
+  <div class="menu" aria-label="CR-Remover"><span></span><span></span><span></span></div>
+</header>
+<main>
+<section class="hero">
+  <h1><span class="gradient">Cr-Remover -<br>Copyright<br>Remover<br>Algorithms</span><br>Instantly</h1>
+  <p class="description">Professional video processing. Upload your video to convert it into a YouTube-friendly MP4, resize it, or replace audio you don't have rights to use.</p>
+</section>
+<section class="card">
+  <form id="form">
+    <div class="drop" id="drop" role="button" tabindex="0">
+      <div class="icon">📤</div>
+      <div class="drop-title">Drag video or <span class="blue">Browse</span></div>
+      <p class="hint">MP4 · MOV · WEBM · MKV · AVI</p>
+    </div>
+    <input id="video" name="video" type="file" accept="video/*">
+    <div class="file" id="fileInfo"></div>
+    <video id="preview" controls playsinline></video>
+    <div class="settings">
+      <div class="field">
+        <label for="resolution">Output resolution</label>
+        <select name="resolution" id="resolution"><option value="1080">1080p Full HD</option><option value="720">720p HD</option></select>
+      </div>
+      <div class="field">
+        <label for="audioMode">Audio option</label>
+        <select name="audio_mode" id="audioMode">
+          <option value="keep">Keep original audio</option>
+          <option value="mute">Mute original audio</option>
+          <option value="replace">Replace with my licensed audio</option>
+        </select>
+      </div>
+    </div>
+    <div class="field audio-field" id="audioField" style="display:none">
+      <label for="audio">Choose audio you own or are licensed to use</label>
+      <input id="audio" name="audio" type="file" accept="audio/*" style="display:block;width:100%;color:#ccc">
+    </div>
+    <button class="btn" id="submit" type="submit">✦ PROCESS VIDEO</button>
+    <div id="status" aria-live="polite"></div>
+  </form>
+  <p class="note"><b>Important:</b> This tool converts and edits video files; it cannot guarantee copyright clearance or remove YouTube Content ID claims. Use only content you own, have permission to use, or are licensed to publish. Processing runs on the server where this app is hosted.</p>
+</section>
+</main>
+<footer>CR-Remover · Video Processing Workspace<br>H.264 MP4 export powered by FFmpeg</footer>
+<script>
+const $=id=>document.getElementById(id);
+let objectUrl=null;
+function pick(){ $('video').click(); }
+$('drop').addEventListener('click',pick);
+$('drop').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
+$('video').addEventListener('change',()=>showFile($('video').files[0]));
+function showFile(f){
+ if(!f)return;
+ if(!f.type.startsWith('video/')){alert('Please choose a video file.');return;}
+ if(objectUrl)URL.revokeObjectURL(objectUrl);
+ objectUrl=URL.createObjectURL(f);
+ $('preview').src=objectUrl;$('preview').style.display='block';
+ $('fileInfo').style.display='block';
+ $('fileInfo').textContent='Selected: '+f.name+' · '+(f.size/1048576).toFixed(2)+' MB';
+ $('status').style.display='none';
+}
+['dragover','dragenter'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.remove('drag');}));
+$('drop').addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f){try{$('video').files=e.dataTransfer.files;}catch(_){}showFile(f);}});
+$('audioMode').addEventListener('change',()=>{$('audioField').style.display=$('audioMode').value==='replace'?'block':'none';});
+$('form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(!$('video').files.length){alert('Please choose a video first.');return;}
+ if($('audioMode').value==='replace'&&!$('audio').files.length){alert('Please choose licensed replacement audio.');return;}
+ const btn=$('submit'),status=$('status');
+ btn.disabled=true;btn.textContent='PROCESSING…';
+ status.style.display='block';status.textContent='Uploading and processing video. Large files may take several minutes…';
+ try{
+   const fd=new FormData($('form'));
+   const res=await fetch('/process',{method:'POST',body:fd});
+   const data=await res.json();
+   if(!res.ok)throw new Error(data.error||'Processing failed.');
+   status.innerHTML='';
+   const p=document.createElement('p');p.textContent=data.message;status.appendChild(p);
+   const a=document.createElement('a');a.href=data.download_url;a.textContent='⬇ Download processed video';a.style.cssText='display:inline-block;margin-top:12px;color:#00dbea;font-weight:bold';
+   status.appendChild(a);
+ }catch(err){status.textContent='Error: '+err.message;}
+ finally{btn.disabled=false;btn.textContent='✦ PROCESS VIDEO';}
+});
+</script>
+</body>
+</html>
